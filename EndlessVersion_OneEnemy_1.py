@@ -1,4 +1,3 @@
-# noinspection DuplicatedCode
 import pygame
 import random
 import math
@@ -79,7 +78,9 @@ while running:
     screen.blit(background, (-170, 0))
 
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+
+        # Ending of the game
+        if ((event.type == pygame.QUIT) or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE)):
             running = False
 
         # If keystroke is pressed then check whether it is left or right
@@ -153,4 +154,4 @@ while running:
     enemy(enemyX, enemyY)
 
     # Updating the pygame window
-    pygame.display.update()
+    pygame.display.flip()  # we can even do : pygame.display.update()

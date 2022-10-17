@@ -7,10 +7,10 @@ from pygame import mixer
 pygame.init()
 
 # create the screen
-screen = pygame.display.set_mode((850, 700))
+screen = pygame.display.set_mode((850, 700), pygame.RESIZABLE)
 
 # Background Screen
-background = pygame.image.load('background_image.png')
+background = pygame.image.load('bg_image.jpeg')
 
 # Adding title to the gaming window
 pygame.display.set_caption("Space Invaders")
@@ -25,6 +25,8 @@ playerX = 405
 playerY = 620
 playerX_change = 0
 playerY_change = 40
+playerX_restrict = screen.get_width() - 60
+playerY_restrict = screen.get_height() - 60
 
 # Enemy
 enemyImg = []
@@ -38,7 +40,7 @@ number_of_enemies = int(input("How many do you want to tackle? "))
 
 for i in range(number_of_enemies):
     enemyImg.append(pygame.image.load('alien.png'))
-    enemyX.append(random.randint(5, 790))
+    enemyX.append(random.randint(5, screen.get_width() - 60))
     enemyY.append(random.randint(50, 150))
     enemyX_change.append(1.75)
     enemyY_change.append(50)
@@ -66,6 +68,14 @@ textY = 10
 # Game Over Text
 over_font = pygame.font.Font('freesansbold.ttf', 64)
 
+# Game Starting Text
+start_font = pygame.font.Font('freesansbold.ttf', 64)
+
+
+def game_start_text():
+    start_text = start_font.render('HUNGRY SNAKE GAME', True, (255, 255, 255))
+    screen.blit(start_text, (screen.get_width() / 2, screen.get_height() / 2))
+
 
 def show_score(x, y):
     score = font.render("Score is " + str(score_value), True, (255, 255, 255))
@@ -74,7 +84,7 @@ def show_score(x, y):
 
 def game_over_text():
     over_text = over_font.render('GAME OVER', True, (255, 255, 255))
-    screen.blit(over_text, (200, 300))
+    screen.blit(over_text, ((screen.get_width() / 2) + 30, (screen.get_height() / 2)))
 
 
 def player(x, y):
@@ -99,6 +109,8 @@ def isCollision(en_x, en_y, bul_x, bul_y):
         return False
 
 
+i = 0
+
 # game loop
 running = True
 while running:
@@ -108,6 +120,9 @@ while running:
 
     # Background Image
     screen.blit(background, (-170, 0))
+
+    # Displaying of Game Starting Text
+    game_start_text()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -131,6 +146,12 @@ while running:
                 bulletX = playerX
                 bulletY = playerY
                 fire_bullet(bulletX, bulletY)
+            if event.key == pygame.K_s:
+                i = 1
+        if event.type == pygame.VIDEORESIZE:
+            playerX_restrict = screen.get_width() - 60
+            playerY_restrict = screen.get_height() - 60
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
@@ -144,19 +165,19 @@ while running:
     # Restricting the movement of the player
     if playerX <= 5:
         playerX = 5
-    elif playerX >= 790:
-        playerX = 790
-    if playerY >= 620:
-        playerY = 620
-    elif playerY <= 520:
-        playerY = 520
+    elif playerX >= playerX_restrict:
+        playerX = playerX_restrict
+    if playerY >= playerY_restrict:
+        playerY = playerY_restrict
+    elif playerY <= screen.get_height() - (screen.get_height() / 4):
+        playerY = screen.get_height() - (screen.get_height() / 4)
 
     for i in range(number_of_enemies):
 
         # Game Over
-        if enemyY[i] > 500:
+        if enemyY[i] > (screen.get_height() - (screen.get_height() / 5)):
             for j in range(number_of_enemies):
-                enemyY[j] = 2000
+                enemyY[j] = 5000
             game_over_text()
             break
 
@@ -167,7 +188,7 @@ while running:
         if enemyX[i] <= 5:
             enemyX_change[i] = 1.75
             enemyY[i] += enemyY_change[i]
-        elif enemyX[i] >= 790:
+        elif enemyX[i] >= screen.get_width() - 60:
             enemyX_change[i] = -1.75
             enemyY[i] += enemyY_change[i]
 
@@ -180,8 +201,8 @@ while running:
             bulletY = 620
             bullet_state = "ready"
             score_value += 1
-            enemyX[i] = random.randint(5, 790)
-            enemyY[i] = random.randint(50, 150)
+            enemyX[i] = random.randint(5, screen.get_width() - 60)
+            enemyY[i] = random.randint(50, screen.get_height() - 60)
 
         # Calling the enemy icon
         enemy(enemyX[i], enemyY[i], i)

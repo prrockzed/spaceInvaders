@@ -36,8 +36,16 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            
         # If keystroke is pressed then check whether it is left or right
         if event.type == pygame.KEYDOWN:
+            
+            # import EndlessVersion_OneEnemy_1
             if event.key == pygame.K_1:
-                # import EndlessVersion_OneEnemy_1
-                pass
+                import EndlessVersion_OneEnemy_1
+            
+            # import EndlessVersion_OneEnemy_2
+            if event.key == pygame.K_2:
+                import EndlessVersion_ManyEnemies
+    
+    pygame.display.update()
