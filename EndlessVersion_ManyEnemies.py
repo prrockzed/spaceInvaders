@@ -10,7 +10,7 @@ pygame.init()
 screen = pygame.display.set_mode((850, 700), pygame.RESIZABLE)
 
 # Background Screen
-background = pygame.image.load('bg_image.jpeg')
+background = pygame.image.load('galaxy.jpeg')
 
 # Adding title to the gaming window
 pygame.display.set_caption("Space Invaders")
@@ -186,7 +186,7 @@ while running:
 
         # Restricting the movement of enemy
         if enemyX[i] <= 5:
-            enemyX_change[i] = 1.75
+            enemyX_change[i] = 1
             enemyY[i] += enemyY_change[i]
         elif enemyX[i] >= screen.get_width() - 60:
             enemyX_change[i] = -1.75
